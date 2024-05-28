@@ -134,7 +134,6 @@ module.exports = function (env, argv) {
       }),
       new CopyPlugin({
         patterns: copyPatterns,
-
       }),
     ],
     module: {
