@@ -6,12 +6,12 @@ if (!images.requestScreenCapture(false)) {
 
 var instant = true;
 var swithCount = 0;
-var auto_skill_on = images.read('/sdcard/Pictures/auto_skill_on.png');
-var auto_panel_leave = images.read('/sdcard/Pictures/auto_panel_leave.png');
+var auto_skill_on = images.read('/sdcard/Arkcode/auto_skill_on.png');
+var auto_panel_leave = images.read('/sdcard/Arkcode/auto_panel_leave.png');
 
 // 错误处理
 const errorPage = () => {
-    captureScreen("/sdcard/Pictures/error.png");
+    captureScreen("/sdcard/Arkcode/error.png");
     toastLog('运行错误');
     clearInterval(instantCheck);
     exit;
@@ -21,7 +21,7 @@ const errorPage = () => {
 const ocrInRegion = (img, x, y, width, height) => {
     var img = images.clip(img, x, y, width, height);
     var txt = paddle.ocrText(img);
-    toastLog(txt);
+    toast(txt);
     return txt;
 };
 
@@ -66,6 +66,16 @@ const panel_check = (img) => {
     return false;
 };
 
+var appcheck = false;
+auto.waitFor();
+while (!appcheck) {
+    if(currentPackage() == 'com.nerversoft.ark.recode'){
+        toastLog('com.nerversoft.ark.recode');
+        appcheck = true;
+    }
+
+};
+
 // 持续检测？自动战斗面板（两个特征：找图 + 文字计数：ocr）
 // 持续检测？自动战斗详情 左下找图
 // 结算页面检测：右下找色|战斗胜利，绿色、战斗失败：红色（找色：左下角） 
@@ -91,13 +101,13 @@ var instantCheck = setInterval(() => {
             pageChange(img);
             return;
         }
-        if (swithCount == 3) {
+        if (swithCount == 4) {
             instant = false;
             toastLog('多次未检测到战斗' + instant);
             pageChange(img);
             return;
         }
-        if (swithCount > 3) {
+        if (swithCount > 4) {
             errorPage();
             return
         }
