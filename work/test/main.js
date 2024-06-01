@@ -18,6 +18,8 @@ if (!images.requestScreenCapture(false)) {
     toast('请求截图失败');
     exit();
 }
+let i = 1
+
 // console.show();
 
 // setInterval(() => {
@@ -37,30 +39,26 @@ if (!images.requestScreenCapture(false)) {
 
 // }, 3000);
 
-// const ocrInRegion_capture = (x, y, width, height, color, range) => {
-//     var color = color || false;
-//     var range = range || ['', ''];
-//     var img_raw = images.captureScreen();
-//     var img = images.clip(img_raw, x, y, width, height);
-//     var img = images.inRange(img, '#000000', '#b7bbbe')
-//     images.save(img, '/sdcard/Pictures/' + i + '.png', "png", 100);
-//     var txt = paddle.ocrText(img);
-//     i++;
-//     toast(txt);
-//     return txt;
-// };
-let i = 1;
-const ocrInRegion = (x, y, width, height) => {
-    let img = images.captureScreen();
-    let img_clip = images.clip(img, x, y, width, height);
-    toastLog('启动ocr');
-    let txt = paddle.ocrText(img_clip);
-    toastLog('ocr结束');
+const ocrInRegion_capture = (x, y, width, height, color_in, range_in) => {
+    let color = color_in || false;
+    let range = range_in || ['', ''];
+    let img_color = null;
+    let img_raw = captureScreen();
+    let img_clip = images.clip(img_raw, x, y, width, height);
+    if (color) {
+        img_color = images.inRange(img_clip, range[0], range[1]);
+        log('二值化完成');
+    }
+    let img_result = img_color || img_clip;
+    // images.save(img_result, '/sdcard/Arkcode/' + i + '.png', "png", 100);
+    let txt = paddle.ocrText(img_result);
+    i++;
+    // log(txt);
     return txt;
 };
-let txt = ocrInRegion(75, 60, 150, 50);
+
+let txt = ocrInRegion_capture(855, 200, 105, 60, true, ['#000000', '#b7bbbe'])
 log(txt);
-log(typeof (img));
 
 
 // 识别结果和截图信息
